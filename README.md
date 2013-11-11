@@ -20,4 +20,4 @@
 	s.up();
 ##项目预览##
 
-	http://runjs.cn/detail/vylszk5d
+http://runjs.cn/detail/vylszk5d
