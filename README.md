@@ -13,7 +13,9 @@
 	s.creatMap();
 ##API##
 向下翻转
+
 	s.down();
 向上翻转
+
 	s.up();
 
