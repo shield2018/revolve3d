@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="jquery-1.7.1.min.js"></script>
+<title>无标题文档</title>
+<style>
+.re3D_xx{
+	-webkit-perspective: 1000;
+	float: left;
+	position: relative;
+	}
+.re3D_all{
+	-webkit-transform-style: preserve-3d;
+	-webkit-transition: all 0.8s ease-in-out;
+}
+.re3D_face{
+	position: absolute;
+	padding: 0px;
+	overflow: hidden;
+	}
+.re3D_one{-webkit-transform:translateZ(140px)}
+.re3D_two{-webkit-transform: rotateX(-90deg) translateZ(140px);}
+.re3D_three{width:280px;height:280px;-webkit-transform: rotateY(-90deg) translateZ(41px); background:#FF0000}	
+.re3D_four{-webkit-transform: rotateX(90deg) translateZ(140px);}
+.re3D_five{-webkit-transform:translateZ(-140px) scaleY(-1);}
+.re3D_six{-webkit-transform:translateZ(-140px) scaleY(-1);}
+</style>
+</head>
+
+<body>
+	<div>
+    	<ul id="example">
+        	<li><a href="www.baidu.com"><img src="slide.png" width="960" height="200"/></a></li>
+            <li><a href="www.baidu1.com"><img src="slide1.png" /></a></li>
+        </ul>
+    </div>
+    <input type="button" style="margin-left:200px" id="ss"/>
+    <input type="button" style="margin-left:200px" id="ss1"/>
+</body>
+
+
+<script>
+function Piece(_dom,z){
+	var dom=_dom;
+	var self=this;
+	var x=0;
+	
+	this.into=function(time){
+		setTimeout(function(){dom.css("-webkit-transform","translateZ("+-(z+50)+"px) rotateX("+x+"deg)");},time);
+	}
+	this.out=function(time){
+		setTimeout(function(){dom.css("-webkit-transform","translateZ("+-z+"px) rotateX("+x+"deg)");},time);
+	}
+	this.up=function(time,a){
+		if(a){
+		setTimeout(function(){x=x+90;dom.css("-webkit-transform","translateZ("+-(z+50)+"px) rotateX("+x+"deg) ");},time);
+		}else{
+		setTimeout(function(){var y=x+20;dom.css("-webkit-transform","translateZ("+-(z+50)+"px) rotateX("+y+"deg) ");},time);
+		}
+	}
+	this.down=function(time,a){
+		if(a){
+		setTimeout(function(){x=x-90;dom.css("-webkit-transform","translateZ("+-(z+50)+"px) rotateX("+x+"deg) ");},time);
+		}else{
+		setTimeout(function(){var y=x-20;dom.css("-webkit-transform","translateZ("+-(z+50)+"px) rotateX("+y+"deg) ");},time);
+		}
+	}	
+}
+function Revolve3D(_id,_num){
+	var id=$("#"+_id);
+	var num=_num; //图片分割数量
+	var self=this;
+	var img_item=id.find("img");
+	var width=$(img_item[0]).width();
+	var height=$(img_item[0]).height();
+	var onewidth=width/num;
+	var n=0;
+	var faces={}
+	
+	var nowimg=0;
+	var imgn;
+	var nextn=0;
+	var lastn=0;
+	var imgln=0;
+	var pieces={};
+	
+	var dom=document.createElement("div");
+	
+	var creatDom=function(){
+		id.hide();
+		$(dom).css("cursor","pointer");
+		$(dom).click(function(){
+			window.location=$(img_item[0]).parent().attr("href")	
+		})
+		
+		var dom_child={};//单个块的数组
+		for(var i=0;i<num;i++){
+			dom_child=document.createElement("div");
+			$(dom_child).addClass("re3D_xx");
+			$(dom_child).css("z-index",Math.ceil(num/2)-Math.abs(Math.ceil(num/2)-i-1));
+			
+			var dom_child1=document.createElement("div");
+			$(dom_child1).css("width",width);
+			$(dom_child1).css("height",height);
+			$(dom_child1).css("-webkit-transform"," translateZ("+-height/2+"px)");
+			$(dom_child1).addClass("re3D_all")
+			for(var n=0;n<6;n++){
+				var face=document.createElement("div");	
+				$(face).addClass("re3D_face");
+				$(face).css("z-index",6-n)
+				if(n<4){
+					$(face).addClass("face"+n);
+					$(face).css("background-position",-onewidth*i+"px 0");
+					$(face).css("width",width/num);
+					$(face).css("height",height);
+					switch (n){
+						case 0:
+							$(face).css("background-image","url("+$(img_item[n]).attr("src")+")");
+							$(face).css("-webkit-transform"," translateZ("+height/2+"px)");
+						break
+						case 1:
+							$(face).css("-webkit-transform","rotateX(90deg) translateZ("+height/2+"px) ");
+						break
+						case 2:
+							$(face).css("-webkit-transform","translateZ("+-height/2+"px) scaleY(-1)");
+						break
+						case 3:
+							$(face).css("-webkit-transform","rotateX(-90deg) translateZ("+height/2+"px)");
+						break
+					}
+				}else if(n==4){
+					$(face).css("width",height);
+					$(face).css("height",height);
+					$(face).css("background","#000");
+					$(face).css("-webkit-transform","rotateY(90deg) translateZ("+-height/2+"px)");
+				}else if(n==5){
+					$(face).css("width",height);
+					$(face).css("height",height);
+					$(face).css("background","#000");
+					$(face).css("-webkit-transform","rotateY(90deg) translateZ("+-height/2+"px)");
+				}
+				if(n==5){
+					$(face).css("margin-left",onewidth*(i+1));
+				}else{
+					$(face).css("margin-left",onewidth*i);
+				}
+				
+				$(dom_child1).append(face);
+			
+			}
+			
+			
+			
+			$(dom_child).append(dom_child1)
+			
+			if(i!=0){
+				$(dom_child).css("margin-left",-width);	
+			}
+			$(dom).append(dom_child);
+			pieces[i]=new Piece($(dom_child1),height/2);
+			
+		}
+		$(dom).insertBefore(id)
+		for(var i=0;i<4;i++){
+			faces[i]=$(".face"+i);
+		}
+	}
+	
+	var nextimg=function(){
+		var max=img_item.length;
+		if(nowimg==max-1){
+			imgn=0;	
+		}else{
+			imgn=nowimg+1;	
+		}
+	}
+	
+	var nextface=function(){
+		if(n==0){
+			nextn=3;
+		}else{
+			nextn=n-1;	
+		}
+	}
+	
+	var lastimg=function(){
+		var max=img_item.length;
+		if(nowimg==0){
+			imgln=img_item.length-1;	
+		}else{
+			imgln=nowimg-1;	
+		}
+	}
+	
+	var lastface=function(){
+		if(n==3){
+			lastn=0;
+		}else{
+			lastn=n+1;	
+		}
+	}
+	
+	this.up=function(){
+		var time=100;
+		nextimg();
+		nextface();
+		faces[nextn].css("background-image","url("+$(img_item[imgn]).attr("src")+")");
+		
+		
+		for(var i=0;i<num;i++){
+			pieces[i].into(time*i);
+			pieces[i].down((time)*i+600,false);
+			pieces[i].up((time)*i+800,true);
+			pieces[i].out((time)*i+1500)
+		}
+		imgln=nowimg;
+		lastn=n;
+		nowimg=imgn;
+		n=nextn;
+		$(dom).click(function(){
+			window.location=$(img_item[imgn]).parent().attr("href")	
+		})
+	}
+	
+	this.down=function(){
+		
+		var time=100;
+		
+		lastimg();
+		lastface();
+		faces[lastn].css("background-image","url("+$(img_item[imgln]).attr("src")+")");
+		
+		for(var i=0;i<num;i++){
+			pieces[i].into(time*i);
+			pieces[i].up((time)*i+600,false);
+			pieces[i].down((time)*i+800,true);
+			pieces[i].out((time)*i+1500)
+		}
+		imgn=nowimg;
+		nextn=n;
+		nowimg=imgln;
+		n=lastn;
+		$(dom).click(function(){
+			window.location=$(img_item[imgln]).parent().attr("href")	
+		})
+	}
+	
+	this.creatMap=function(){  //拆分图片
+		creatDom()
+	}
+	
+}
+
+
+var s=new Revolve3D("example",15);
+s.creatMap()
+$("#ss").click(function(){
+	
+	s.down();	
+})
+$("#ss1").click(function(){
+	
+	s.up();	
+})
+</script>
+</html>
