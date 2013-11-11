@@ -18,4 +18,6 @@
 向上翻转
 
 	s.up();
+##项目预览##
 
+	http://runjs.cn/detail/vylszk5d
