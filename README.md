@@ -21,3 +21,7 @@
 ##项目预览##
 
 http://runjs.cn/detail/vylszk5d
+
+##备注##
+
+只支持chrome等支持CSS3 3d的浏览器
